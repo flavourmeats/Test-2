@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Flavour Meats</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #8B4513;
+            --secondary: #FF8C00;
+            --accent: #8B0000;
+            --light: #FFF8DC;
+            --dark: #362312;
+            --gray: #f5f5f5;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: var(--light);
+            color: var(--dark);
+            line-height: 1.6;
+            padding: 2rem;
+        }
+        
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 2rem;
+        }
+        
+        .password-form {
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .password-form input {
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 0.5rem;
+        }
+        
+        .password-form button {
+            padding: 0.7rem 1.5rem;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .admin-panel {
+            display: none;
+        }
+        
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 2rem;
+        }
+        
+        .inventory-table th,
+        .inventory-table td {
+            padding: 0.8rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .inventory-table th {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .inventory-table tr:nth-child(even) {
+            background-color: var(--light);
+        }
+        
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .quantity-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quantity-input {
+            width: 60px;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .save-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--secondary);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            margin-top: 1rem;
+        }
+        
+        .save-btn:hover {
+            background-color: var(--accent);
+        }
+        
+        .logout-btn {
+            display: block;
+            text-align: center;
+            margin-top: 1rem;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .logout-btn:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <h1>Flavour Meats Admin Panel</h1>
+        
+        <div class="password-form" id="password-form">
+            <input type="password" id="password-input" placeholder="Enter admin password">
+            <button onclick="checkPassword()">Login</button>
+        </div>
+        
+        <div class="admin-panel" id="admin-panel">
+            <h2>Inventory Management</h2>
+            <table class="inventory-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Current Stock</th>
+                        <th>Update Stock</th>
+                    </tr>
+                </thead>
+                <tbody id="inventory-body">
+                    <!-- Inventory will be populated here -->
+                </tbody>
+            </table>
+            
+            <button class="save-btn" onclick="saveInventory()">Save Changes</button>
+            <a href="index.html" class="logout-btn">Back to Home</a>
+        </div>
+    </div>
+
+    <script>
+        // Admin password (in a real application, this would be securely stored)
+        const ADMIN_PASSWORD = "flavour2025";
+        
+        function checkPassword() {
+            const passwordInput = document.getElementById('password-input').value;
+            
+            if (passwordInput === ADMIN_PASSWORD) {
+                document.getElementById('password-form').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadInventory();
+            } else {
+                alert('Incorrect password');
+            }
+        }
+        
+        function loadInventory() {
+            // Initialize inventory if not exists
+            if (!localStorage.getItem('inventory')) {
+                const initialInventory = {
+                    'product-1': 10,
+                    'product-2': 10,
+                    'product-3': 10,
+                    'product-4-250g': 10,
+                    'product-4-500g': 10,
+                    'product-4-1kg': 10,
+                    'product-5': 10
+                };
+                localStorage.setItem('inventory', JSON.stringify(initialInventory));
+            }
+            
+            const inventory = JSON.parse(localStorage.getItem('inventory'));
+            const inventoryBody = document.getElementById('inventory-body');
+            inventoryBody.innerHTML = '';
+            
+            // Product names mapping
+            const productNames = {
+                'product-1': 'Classic BBQ Sausages',
+                'product-2': 'Traditional African Boerewors',
+                'product-3': 'Premium Pork Cuts',
+                'product-4-250g': 'Quality Mince (250g)',
+                'product-4-500g': 'Quality Mince (500g)',
+                'product-4-1kg': 'Quality Mince (1kg)',
+                'product-5': 'Spicy Chili Sausages'
+            };
+            
+            for (const productId in inventory) {
+                const row = document.createElement('tr');
+                
+                // Product name cell
+                const nameCell = document.createElement('td');
+                nameCell.textContent = productNames[productId] || productId;
+                
+                // Current stock cell
+                const stockCell = document.createElement('td');
+                stockCell.textContent = inventory[productId];
+                stockCell.id = `stock-${productId}`;
+                
+                // Controls cell
+                const controlsCell = document.createElement('td');
+                controlsCell.className = 'quantity-controls';
+                
+                const minusBtn = document.createElement('button');
+                minusBtn.className = 'quantity-btn';
+                minusBtn.textContent = '-';
+                minusBtn.onclick = function() {
+                    updateStock(productId, -1);
+                };
+                
+                const plusBtn = document.createElement('button');
+                plusBtn.className = 'quantity-btn';
+                plusBtn.textContent = '+';
+                plusBtn.onclick = function() {
+                    updateStock(productId, 1);
+                };
+                
+                const input = document.createElement('input');
+                input.type = 'number';
+                input.className = 'quantity-input';
+                input.value = inventory[productId];
+                input.min = 0;
+                input.id = `input-${productId}`;
+                input.onchange = function() {
+                    const value = parseInt(input.value);
+                    if (!isNaN(value) && value >= 0) {
+                        inventory[productId] = value;
+                        document.getElementById(`stock-${productId}`).textContent = value;
+                    }
+                };
+                
+                controlsCell.appendChild(minusBtn);
+                controlsCell.appendChild(input);
+                controlsCell.appendChild(plusBtn);
+                
+                row.appendChild(nameCell);
+                row.appendChild(stockCell);
+                row.appendChild(controlsCell);
+                
+                inventoryBody.appendChild(row);
+            }
+        }
+        
+        function updateStock(productId, change) {
+            const inventory = JSON.parse(localStorage.getItem('inventory'));
+            const newValue = inventory[productId] + change;
+            
+            if (newValue >= 0) {
+                inventory[productId] = newValue;
+                document.getElementById(`stock-${productId}`).textContent = newValue;
+                document.getElementById(`input-${productId}`).value = newValue;
+            }
+        }
+        
+        function saveInventory() {
+            const inventory = JSON.parse(localStorage.getItem('inventory'));
+            
+            // Update from input fields
+            for (const productId in inventory) {
+                const inputValue = parseInt(document.getElementById(`input-${productId}`).value);
+                if (!isNaN(inputValue) && inputValue >= 0) {
+                    inventory[productId] = inputValue;
+                }
+            }
+            
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            alert('Inventory updated successfully!');
+        }
+        
+        // Allow Enter key to submit password
+        document.getElementById('password-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                checkPassword();
+            }
+        });
+    </script>
+</body>
+</html>
