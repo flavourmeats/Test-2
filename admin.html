@@ -26,14 +26,14 @@
             background-color: var(--light);
             color: var(--dark);
             line-height: 1.6;
-            padding: 2rem;
+            padding: 1rem;
         }
         
         .admin-container {
             max-width: 900px;
             margin: 0 auto;
             background-color: white;
-            padding: 2rem;
+            padding: 1.5rem;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
@@ -41,7 +41,8 @@
         h1 {
             text-align: center;
             color: var(--primary);
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
         }
         
         .password-form {
@@ -49,38 +50,57 @@
             text-align: center;
         }
         
+        .password-form p {
+            margin-bottom: 1rem;
+        }
+        
         .password-form form {
             display: flex;
-            justify-content: center;
-            gap: 10px;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
             margin-top: 1rem;
         }
         
         .password-form input {
-            padding: 0.7rem;
+            padding: 0.8rem;
             border: 1px solid #ddd;
             border-radius: 5px;
-            width: 250px;
+            width: 100%;
+            max-width: 300px;
+            font-size: 1rem;
         }
         
         .password-form button {
-            padding: 0.7rem 1.5rem;
+            padding: 0.8rem 2rem;
             background-color: var(--primary);
             color: white;
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            font-size: 1rem;
         }
         
         .admin-panel {
             display: none;
         }
         
+        .admin-panel h2 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 2rem;
+            width: 100%;
+        }
+        
         .inventory-table {
             width: 100%;
             border-collapse: collapse;
-            margin-bottom: 2rem;
-            table-layout: fixed;
+            min-width: 600px;
         }
         
         .inventory-table th,
@@ -88,43 +108,67 @@
             padding: 0.8rem;
             text-align: left;
             border-bottom: 1px solid #ddd;
-            word-wrap: break-word;
         }
         
         .inventory-table th {
             background-color: var(--primary);
             color: white;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
         }
         
         .inventory-table tr:nth-child(even) {
             background-color: var(--light);
         }
         
+        .product-name {
+            min-width: 180px;
+        }
+        
+        .stock-column {
+            min-width: 100px;
+            text-align: center;
+        }
+        
+        .controls-column {
+            min-width: 180px;
+        }
+        
         .quantity-controls {
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            justify-content: center;
         }
         
         .quantity-btn {
             background-color: var(--primary);
             color: white;
             border: none;
-            width: 30px;
-            height: 30px;
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .quantity-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
         }
         
         .quantity-input {
             width: 70px;
-            padding: 0.5rem;
+            padding: 0.6rem;
             border: 1px solid #ddd;
             border-radius: 5px;
             text-align: center;
+            font-size: 1rem;
         }
         
         .save-btn {
@@ -138,6 +182,7 @@
             font-size: 1.1rem;
             cursor: pointer;
             margin-top: 1rem;
+            transition: background-color 0.3s;
         }
         
         .save-btn:hover {
@@ -150,6 +195,7 @@
             margin-top: 1rem;
             color: var(--primary);
             text-decoration: none;
+            font-weight: 500;
         }
         
         .logout-btn:hover {
@@ -167,6 +213,87 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             display: none;
             z-index: 1000;
+            max-width: 300px;
+        }
+        
+        @media (max-width: 768px) {
+            .admin-container {
+                padding: 1rem;
+            }
+            
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .password-form form {
+                width: 100%;
+            }
+            
+            .password-form input {
+                max-width: none;
+            }
+            
+            .inventory-table {
+                min-width: 100%;
+            }
+            
+            .product-name {
+                min-width: 140px;
+            }
+            
+            .stock-column {
+                min-width: 80px;
+            }
+            
+            .controls-column {
+                min-width: 150px;
+            }
+            
+            .quantity-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 1rem;
+            }
+            
+            .quantity-input {
+                width: 60px;
+                padding: 0.5rem;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            body {
+                padding: 0.5rem;
+            }
+            
+            .inventory-table th,
+            .inventory-table td {
+                padding: 0.6rem;
+            }
+            
+            .product-name {
+                min-width: 120px;
+                font-size: 0.9rem;
+            }
+            
+            .stock-column {
+                min-width: 60px;
+            }
+            
+            .controls-column {
+                min-width: 130px;
+            }
+            
+            .quantity-btn {
+                width: 28px;
+                height: 28px;
+            }
+            
+            .quantity-input {
+                width: 50px;
+                padding: 0.4rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -179,34 +306,38 @@
         <div class="password-form" id="password-form">
             <p>Enter the admin password to access inventory management</p>
             <form onsubmit="checkPassword(event)">
-                <input type="password" id="password-input" name="password" placeholder="Enter admin password" autocomplete="current-password">
+                <input type="password" id="password-input" name="password" placeholder="Enter admin password" autocomplete="current-password" required>
                 <button type="submit">Login</button>
             </form>
         </div>
         
         <div class="admin-panel" id="admin-panel">
             <h2>Inventory Management</h2>
-            <table class="inventory-table">
-                <thead>
-                    <tr>
-                        <th style="width: 40%">Product</th>
-                        <th style="width: 20%">Current Stock</th>
-                        <th style="width: 40%">Update Stock</th>
-                    </tr>
-                </thead>
-                <tbody id="inventory-body">
-                    <!-- Inventory will be populated here -->
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table class="inventory-table">
+                    <thead>
+                        <tr>
+                            <th class="product-name">Product</th>
+                            <th class="stock-column">Current Stock</th>
+                            <th class="controls-column">Update Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-body">
+                        <!-- Inventory will be populated here -->
+                    </tbody>
+                </table>
+            </div>
             
             <button class="save-btn" onclick="saveInventory()">Save Changes</button>
             <a href="index.html" class="logout-btn">Back to Home</a>
         </div>
     </div>
-
     <script>
-        // Admin password (in a real application, this would be securely stored)
+        // Admin password
         const ADMIN_PASSWORD = "flavour2025";
+        
+        // Store current inventory values for comparison
+        let currentInventory = {};
         
         function showNotification(message) {
             const notification = document.getElementById('notification');
@@ -235,117 +366,165 @@
             // Initialize inventory if not exists
             if (!localStorage.getItem('inventory')) {
                 const initialInventory = {
-                    'product-1': 10,
-                    'product-2': 10,
-                    'product-3': 10,
-                    'product-4-250g': 10,
-                    'product-4-500g': 10,
-                    'product-4-1kg': 10,
-                    'product-5': 10
+                    'product-1': 10, // Quality Mince (250g)
+                    'product-2': 10, // Quality Mince (500g)
+                    'product-3': 10, // Quality Mince (1kg)
+                    'product-4': 10, // Classic BBQ Sausages
+                    'product-5': 10, // Traditional African Boerewors
+                    'product-6': 10, // Pork Mince
+                    'product-7': 10  // Spicy Chili Sausages
                 };
                 localStorage.setItem('inventory', JSON.stringify(initialInventory));
             }
             
             const inventory = JSON.parse(localStorage.getItem('inventory'));
+            currentInventory = {...inventory};
             const inventoryBody = document.getElementById('inventory-body');
             inventoryBody.innerHTML = '';
             
-            // Product names mapping
+            // Product names mapping (in the desired order)
+            const productOrder = [
+                'product-1',
+                'product-2',
+                'product-3',
+                'product-4',
+                'product-5',
+                'product-6',
+                'product-7'
+            ];
+            
             const productNames = {
-                'product-1': 'Classic BBQ Sausages',
-                'product-2': 'Traditional African Boerewors',
-                'product-3': 'Premium Pork Cuts',
-                'product-4-250g': 'Quality Mince (250g)',
-                'product-4-500g': 'Quality Mince (500g)',
-                'product-4-1kg': 'Quality Mince (1kg)',
-                'product-5': 'Spicy Chili Sausages'
+                'product-1': 'Quality Mince (250g)',
+                'product-2': 'Quality Mince (500g)',
+                'product-3': 'Quality Mince (1kg)',
+                'product-4': 'Classic BBQ Sausages',
+                'product-5': 'Traditional African Boerewors',
+                'product-6': 'Pork Mince',
+                'product-7': 'Spicy Chili Sausages'
             };
             
-            for (const productId in inventory) {
-                const row = document.createElement('tr');
-                
-                // Product name cell
-                const nameCell = document.createElement('td');
-                nameCell.textContent = productNames[productId] || productId;
-                
-                // Current stock cell
-                const stockCell = document.createElement('td');
-                stockCell.textContent = inventory[productId];
-                stockCell.id = `stock-${productId}`;
-                
-                // Controls cell
-                const controlsCell = document.createElement('td');
-                controlsCell.className = 'quantity-controls';
-                
-                const minusBtn = document.createElement('button');
-                minusBtn.className = 'quantity-btn';
-                minusBtn.textContent = '-';
-                minusBtn.onclick = function() {
-                    updateStock(productId, -1);
-                };
-                
-                const plusBtn = document.createElement('button');
-                plusBtn.className = 'quantity-btn';
-                plusBtn.textContent = '+';
-                plusBtn.onclick = function() {
-                    updateStock(productId, 1);
-                };
-                
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.className = 'quantity-input';
-                input.value = inventory[productId];
-                input.min = 0;
-                input.id = `input-${productId}`;
-                input.addEventListener('change', function() {
-                    const value = parseInt(input.value);
-                    if (!isNaN(value) && value >= 0) {
-                        inventory[productId] = value;
-                        document.getElementById(`stock-${productId}`).textContent = value;
-                    } else {
-                        input.value = inventory[productId];
+            // Create rows in the specified order
+            productOrder.forEach(productId => {
+                if (inventory.hasOwnProperty(productId)) {
+                    const row = document.createElement('tr');
+                    
+                    // Product name cell
+                    const nameCell = document.createElement('td');
+                    nameCell.className = 'product-name';
+                    nameCell.textContent = productNames[productId] || productId;
+                    
+                    // Current stock cell
+                    const stockCell = document.createElement('td');
+                    stockCell.className = 'stock-column';
+                    stockCell.textContent = inventory[productId];
+                    stockCell.id = `stock-${productId}`;
+                    
+                    // Controls cell
+                    const controlsCell = document.createElement('td');
+                    controlsCell.className = 'controls-column';
+                    
+                    const controlsDiv = document.createElement('div');
+                    controlsDiv.className = 'quantity-controls';
+                    
+                    const minusBtn = document.createElement('button');
+                    minusBtn.className = 'quantity-btn';
+                    minusBtn.textContent = '-';
+                    minusBtn.onclick = function() {
+                        updateStock(productId, -1);
+                    };
+                    
+                    // Disable minus button if stock is 0
+                    if (inventory[productId] <= 0) {
+                        minusBtn.disabled = true;
                     }
-                });
-                
-                controlsCell.appendChild(minusBtn);
-                controlsCell.appendChild(input);
-                controlsCell.appendChild(plusBtn);
-                
-                row.appendChild(nameCell);
-                row.appendChild(stockCell);
-                row.appendChild(controlsCell);
-                
-                inventoryBody.appendChild(row);
-            }
+                    
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.className = 'quantity-input';
+                    input.value = inventory[productId];
+                    input.min = 0;
+                    input.id = `input-${productId}`;
+                    input.addEventListener('change', function() {
+                        const value = parseInt(input.value);
+                        if (!isNaN(value) && value >= 0) {
+                            updateStockValue(productId, value);
+                        } else {
+                            input.value = inventory[productId];
+                        }
+                    });
+                    
+                    const plusBtn = document.createElement('button');
+                    plusBtn.className = 'quantity-btn';
+                    plusBtn.textContent = '+';
+                    plusBtn.onclick = function() {
+                        updateStock(productId, 1);
+                    };
+                    
+                    controlsDiv.appendChild(minusBtn);
+                    controlsDiv.appendChild(input);
+                    controlsDiv.appendChild(plusBtn);
+                    
+                    controlsCell.appendChild(controlsDiv);
+                    
+                    row.appendChild(nameCell);
+                    row.appendChild(stockCell);
+                    row.appendChild(controlsCell);
+                    
+                    inventoryBody.appendChild(row);
+                }
+            });
         }
         
         function updateStock(productId, change) {
             const input = document.getElementById(`input-${productId}`);
+            const minusBtn = input.previousElementSibling;
             let newValue = parseInt(input.value) + change;
             
             if (newValue < 0) newValue = 0;
             
             input.value = newValue;
             document.getElementById(`stock-${productId}`).textContent = newValue;
+            
+            // Enable/disable minus button based on value
+            minusBtn.disabled = newValue <= 0;
+        }
+        
+        function updateStockValue(productId, value) {
+            const minusBtn = document.getElementById(`input-${productId}`).previousElementSibling;
+            document.getElementById(`input-${productId}`).value = value;
+            document.getElementById(`stock-${productId}`).textContent = value;
+            
+            // Enable/disable minus button based on value
+            minusBtn.disabled = value <= 0;
         }
         
         function saveInventory() {
             const inventory = JSON.parse(localStorage.getItem('inventory'));
+            let hasChanges = false;
             
             // Update from input fields
             for (const productId in inventory) {
                 const inputValue = parseInt(document.getElementById(`input-${productId}`).value);
                 if (!isNaN(inputValue) && inputValue >= 0) {
-                    inventory[productId] = inputValue;
+                    if (inventory[productId] !== inputValue) {
+                        inventory[productId] = inputValue;
+                        hasChanges = true;
+                    }
                 }
             }
             
-            localStorage.setItem('inventory', JSON.stringify(inventory));
-            showNotification('Inventory updated successfully!');
-            
-            // Update the main site if it's open in another tab
-            if (typeof(Storage) !== "undefined") {
-                localStorage.setItem('inventoryUpdated', Date.now().toString());
+            if (hasChanges) {
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                currentInventory = {...inventory};
+                
+                // Update the main site if it's open in another tab
+                if (typeof(Storage) !== "undefined") {
+                    localStorage.setItem('inventoryUpdated', Date.now().toString());
+                }
+                
+                showNotification('Inventory updated successfully!');
+            } else {
+                showNotification('No changes to save.');
             }
         }
         
@@ -353,6 +532,24 @@
         document.getElementById('password-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 checkPassword(e);
+            }
+        });
+        
+        // Check for unsaved changes before leaving
+        window.addEventListener('beforeunload', function(e) {
+            let hasUnsavedChanges = false;
+            
+            for (const productId in currentInventory) {
+                const inputValue = parseInt(document.getElementById(`input-${productId}`)?.value);
+                if (!isNaN(inputValue) && inputValue !== currentInventory[productId]) {
+                    hasUnsavedChanges = true;
+                    break;
+                }
+            }
+            
+            if (hasUnsavedChanges) {
+                e.preventDefault();
+                e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
             }
         });
     </script>
