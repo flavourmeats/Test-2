@@ -30,7 +30,7 @@
         }
         
         .admin-container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
             background-color: white;
             padding: 2rem;
@@ -49,11 +49,18 @@
             text-align: center;
         }
         
+        .password-form form {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 1rem;
+        }
+        
         .password-form input {
             padding: 0.7rem;
             border: 1px solid #ddd;
             border-radius: 5px;
-            margin-right: 0.5rem;
+            width: 250px;
         }
         
         .password-form button {
@@ -73,6 +80,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 2rem;
+            table-layout: fixed;
         }
         
         .inventory-table th,
@@ -80,6 +88,7 @@
             padding: 0.8rem;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            word-wrap: break-word;
         }
         
         .inventory-table th {
@@ -111,7 +120,7 @@
         }
         
         .quantity-input {
-            width: 60px;
+            width: 70px;
             padding: 0.5rem;
             border: 1px solid #ddd;
             border-radius: 5px;
@@ -146,15 +155,33 @@
         .logout-btn:hover {
             text-decoration: underline;
         }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem;
+            background-color: var(--accent);
+            color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            display: none;
+            z-index: 1000;
+        }
     </style>
 </head>
 <body>
+    <div class="notification" id="notification"></div>
+    
     <div class="admin-container">
         <h1>Flavour Meats Admin Panel</h1>
         
         <div class="password-form" id="password-form">
-            <input type="password" id="password-input" placeholder="Enter admin password">
-            <button onclick="checkPassword()">Login</button>
+            <p>Enter the admin password to access inventory management</p>
+            <form onsubmit="checkPassword(event)">
+                <input type="password" id="password-input" name="password" placeholder="Enter admin password" autocomplete="current-password">
+                <button type="submit">Login</button>
+            </form>
         </div>
         
         <div class="admin-panel" id="admin-panel">
@@ -162,9 +189,9 @@
             <table class="inventory-table">
                 <thead>
                     <tr>
-                        <th>Product</th>
-                        <th>Current Stock</th>
-                        <th>Update Stock</th>
+                        <th style="width: 40%">Product</th>
+                        <th style="width: 20%">Current Stock</th>
+                        <th style="width: 40%">Update Stock</th>
                     </tr>
                 </thead>
                 <tbody id="inventory-body">
@@ -181,7 +208,18 @@
         // Admin password (in a real application, this would be securely stored)
         const ADMIN_PASSWORD = "flavour2025";
         
-        function checkPassword() {
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+        
+        function checkPassword(event) {
+            event.preventDefault();
             const passwordInput = document.getElementById('password-input').value;
             
             if (passwordInput === ADMIN_PASSWORD) {
@@ -189,7 +227,7 @@
                 document.getElementById('admin-panel').style.display = 'block';
                 loadInventory();
             } else {
-                alert('Incorrect password');
+                showNotification('Incorrect password');
             }
         }
         
@@ -259,13 +297,15 @@
                 input.value = inventory[productId];
                 input.min = 0;
                 input.id = `input-${productId}`;
-                input.onchange = function() {
+                input.addEventListener('change', function() {
                     const value = parseInt(input.value);
                     if (!isNaN(value) && value >= 0) {
                         inventory[productId] = value;
                         document.getElementById(`stock-${productId}`).textContent = value;
+                    } else {
+                        input.value = inventory[productId];
                     }
-                };
+                });
                 
                 controlsCell.appendChild(minusBtn);
                 controlsCell.appendChild(input);
@@ -280,14 +320,13 @@
         }
         
         function updateStock(productId, change) {
-            const inventory = JSON.parse(localStorage.getItem('inventory'));
-            const newValue = inventory[productId] + change;
+            const input = document.getElementById(`input-${productId}`);
+            let newValue = parseInt(input.value) + change;
             
-            if (newValue >= 0) {
-                inventory[productId] = newValue;
-                document.getElementById(`stock-${productId}`).textContent = newValue;
-                document.getElementById(`input-${productId}`).value = newValue;
-            }
+            if (newValue < 0) newValue = 0;
+            
+            input.value = newValue;
+            document.getElementById(`stock-${productId}`).textContent = newValue;
         }
         
         function saveInventory() {
@@ -302,13 +341,18 @@
             }
             
             localStorage.setItem('inventory', JSON.stringify(inventory));
-            alert('Inventory updated successfully!');
+            showNotification('Inventory updated successfully!');
+            
+            // Update the main site if it's open in another tab
+            if (typeof(Storage) !== "undefined") {
+                localStorage.setItem('inventoryUpdated', Date.now().toString());
+            }
         }
         
         // Allow Enter key to submit password
         document.getElementById('password-input').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                checkPassword();
+                checkPassword(e);
             }
         });
     </script>
